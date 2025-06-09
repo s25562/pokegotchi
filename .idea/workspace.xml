@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1c2f628-57bd-470a-889e-09329a4a48f4" name="Changes" comment="" />
+    <list default="true" id="f1c2f628-57bd-470a-889e-09329a4a48f4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pokegotchi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pokegotchi.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/Bulbasaur.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/Charmander.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/Pies.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/Squirtle.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,9 +32,16 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "Z:/pokegotchi",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/jakub/Desktop/pokegotchi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -30,8 +49,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153" />
-        <option value="bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.159" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
       </set>
     </attachedChunks>
   </component>
@@ -45,10 +64,16 @@
       <updated>1749397292363</updated>
       <workItem from="1749397293617" duration="5000" />
       <workItem from="1749397307266" duration="18000" />
+      <workItem from="1749446155577" duration="672000" />
+      <workItem from="1749447015793" duration="102000" />
+      <workItem from="1749447811974" duration="4873000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/pokegotchi$main.coverage" NAME="main Coverage Results" MODIFIED="1749452726418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pythonProject" />
   </component>
 </project>
