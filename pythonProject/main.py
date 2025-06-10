@@ -1,8 +1,16 @@
 import pygame
 import sys
+import json
+import os
+if not os.path.exists("saves"):
+    os.makedirs("saves")
 
 # Inicjalizacja Pygame
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load("assets/07. Pokémon Lab.mp3")  # lub .ogg
+pygame.mixer.music.set_volume(0.5)  # Głośność od 0.0 do 1.0
+pygame.mixer.music.play(-1)  # -1 = zapętlaj nieskończenie
 
 #Timer wyboru zwierzaka
 start_time = pygame.time.get_ticks()
@@ -34,6 +42,8 @@ pikachu_image = pygame.transform.scale(pikachu_image, (200, 200))
 
 
 
+
+
 # Tworzenie klasy Pokemon
 class Pet:
     def __init__(self, name):
@@ -53,6 +63,31 @@ class Pet:
         self.evolution_stage = 0
         self.level = 1
         self.load_image()
+
+    def save(self, player_name):
+        data = {
+            "name": self.name,
+            "hunger": self.hunger,
+            "happiness": self.happiness,
+            "sleepiness": self.sleepiness,
+            "level": self.level,
+            "experience": self.experience
+        }
+        with open(f"saves/{player_name}.json", "w") as f:
+            json.dump(data, f)
+        print("Gra zapisana!")
+
+    @staticmethod
+    def load(player_name):
+        with open(f"saves/{player_name}.json", "r") as f:
+            data = json.load(f)
+        pet = Pet(data["name"])
+        pet.hunger = data["hunger"]
+        pet.happiness = data["happiness"]
+        pet.sleepiness = data["sleepiness"]
+        pet.level = data["level"]
+        pet.experience = data["experience"]
+        return pet
 
     def level_up(self):
         self.level += 1
@@ -225,10 +260,81 @@ def choose_pet():
 
     pygame.display.update()
 
+
+def player_select_menu():
+    while True:
+        screen.fill(BLACK)
+        title = font.render("Wybierz gracza", True, WHITE)
+        screen.blit(title, (300, 50))
+
+        files = [f[:-5] for f in os.listdir("saves") if f.endswith(".json")]
+
+        # Lista graczy
+        for i, name in enumerate(files):
+            pygame.draw.rect(screen, BLUE, (300, 120 + i * 60, 200, 50))
+            screen.blit(font.render(name, True, WHITE), (320, 130 + i * 60))
+
+        # Nowy gracz
+        pygame.draw.rect(screen, GREEN, (300, 120 + len(files) * 60, 200, 50))
+        screen.blit(font.render("Nowy gracz", True, BLACK), (310, 130 + len(files) * 60))
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                for i, name in enumerate(files):
+                    if 300 <= x <= 500 and 120 + i * 60 <= y <= 170 + i * 60:
+                        pet = Pet.load(name)
+                        game_loop(pet, name)
+                        return
+
+                # Nowy gracz
+                new_index_y = 120 + len(files) * 60
+                if 300 <= x <= 500 and new_index_y <= y <= new_index_y + 50:
+                    name = input("Podaj imię gracza: ")
+                    pet = None
+                    game_loop(pet, name)
+                    return
+
+music_playing = True
+
+def main_menu():
+    while True:
+        screen.fill(BLACK)
+        screen.blit(font.render("Pokegotchi", True, WHITE), (330, 100))
+
+        pygame.draw.rect(screen, GREEN, (300, 250, 200, 50))
+        screen.blit(font.render("Zagraj", True, BLACK), (360, 260))
+
+        pygame.draw.rect(screen, RED, (300, 350, 200, 50))
+        screen.blit(font.render("Wyjdź", True, BLACK), (360, 360))
+
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+
+                if 300 <= x <= 500 and 250 <= y <= 300:
+                    player_select_menu()
+                    return
+                elif 300 <= x <= 500 and 350 <= y <= 400:
+                    pygame.quit()
+                    sys.exit()
+
+
 # Główna pętla gry
-def game_loop():
+def game_loop(pet=None, player_name=None):
     running = True
-    pet = None
 
     while running:
         screen.fill(BLACK)
@@ -239,12 +345,16 @@ def game_loop():
             pet.update()
             pet.draw()
 
+            # EXP bar i przyciski jak wcześniej...
 
-        # Obsługa zdarzeń
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s and pet and player_name:
+                    pet.save(player_name)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
@@ -257,18 +367,14 @@ def game_loop():
                     elif 490 <= x <= 690 and 400 <= y <= 450:
                         pet = Pet("Bulbasaur")
 
-                # Sprawdzanie kliknięć przycisków
-                if pet:
-                    if 60 <= x <= 260 and 500 <= y <= 550:  # Nakarm
-                        pet.feed()
-                        pet.gainExperience()
-                    elif 290 <= x <= 490 and 500 <= y <= 550:  # Baw się
-                        pet.play()
-                        pet.gainExperience()
-                    elif 520 <= x <= 720 and 500 <= y <= 550:  # Śpij
-                        pet.sleep()
-                        pet.gainExperience()
+                elif 60 <= x <= 260 and 500 <= y <= 550:
+                    pet.feed(); pet.gainExperience()
+                elif 290 <= x <= 490 and 500 <= y <= 550:
+                    pet.play(); pet.gainExperience()
+                elif 520 <= x <= 720 and 500 <= y <= 550:
+                    pet.sleep(); pet.gainExperience()
+
         pygame.display.update()
 
 # Uruchomienie gry
-game_loop()
+main_menu()
