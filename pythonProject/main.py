@@ -8,9 +8,9 @@ if not os.path.exists("saves"):
 # Inicjalizacja Pygame
 pygame.init()
 pygame.mixer.init()
-pygame.mixer.music.load("assets/07. Pokémon Lab.mp3")  # lub .ogg
-pygame.mixer.music.set_volume(0.5)  # Głośność od 0.0 do 1.0
-pygame.mixer.music.play(-1)  # -1 = zapętlaj nieskończenie
+# pygame.mixer.music.load("assets/07. Pokémon Lab.mp3")  # lub .ogg
+# pygame.mixer.music.set_volume(0.5)  # Głośność od 0.0 do 1.0
+# pygame.mixer.music.play(-1)  # -1 = zapętlaj nieskończenie
 
 #Timer wyboru zwierzaka
 start_time = pygame.time.get_ticks()
@@ -56,7 +56,7 @@ class Pet:
         self.happiness_timer = 0
         self.sleepiness_timer = 0
         self.hunger_increment_interval = 100 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
-        self.happiness_increment_interval = 400 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
+        self.happiness_increment_interval = 400000 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
         self.sleepness_increment_interval = 300 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
         self.experience = 0 # EXP
         self.max_experience = width - 12
@@ -124,11 +124,11 @@ class Pet:
                 self.name = "Venusaur"
                 self.load_image()
                 self.experience = 0
-            if self.level == 25:
-                if self.name == "Charmander":
-                    self.name = "Charmeleon"
-                    self.load_image()
-                    self.experience = 0
+        if self.level == 25:
+             if self.name == "Charmander":
+                self.name = "Charmeleon"
+                self.load_image()
+                self.experience = 0
         if self.level == 50:
             if self.name == "Charmeleon":
                 self.name = "Charizard"
@@ -196,6 +196,10 @@ class Pet:
 
         pygame.draw.rect(screen, RED, (520, 500, 200, 50))
         sleep_text = font.render("Śpij", True, WHITE)
+        screen.blit(sleep_text, (545, 515))
+
+        pygame.draw.rect(screen, YELLOW, (520, 500, 200, 50))
+        sleep_text = font.render("SAVE", True, WHITE)
         screen.blit(sleep_text, (545, 515))
 
     def load_image(self):
@@ -293,7 +297,7 @@ def player_select_menu():
                         game_loop(pet, name)
                         return
 
-                # Nowy gracz
+                # Dodaj Nowy gracz - aktualnie wpisywany z konsoli
                 new_index_y = 120 + len(files) * 60
                 if 300 <= x <= 500 and new_index_y <= y <= new_index_y + 50:
                     name = input("Podaj imię gracza: ")
@@ -301,7 +305,6 @@ def player_select_menu():
                     game_loop(pet, name)
                     return
 
-music_playing = True
 
 def main_menu():
     while True:
@@ -335,7 +338,8 @@ def main_menu():
 # Główna pętla gry
 def game_loop(pet=None, player_name=None):
     running = True
-
+    current_player = None
+    
     while running:
         screen.fill(BLACK)
 
@@ -373,6 +377,7 @@ def game_loop(pet=None, player_name=None):
                     pet.play(); pet.gainExperience()
                 elif 520 <= x <= 720 and 500 <= y <= 550:
                     pet.sleep(); pet.gainExperience()
+
 
         pygame.display.update()
 
