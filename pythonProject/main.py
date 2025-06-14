@@ -4,7 +4,7 @@ import json
 import os
 if not os.path.exists("saves"):
     os.makedirs("saves")
-from Button import Button
+# from Button import Button
 
 # Inicjalizacja Pygame
 pygame.init()
@@ -61,7 +61,7 @@ class Pet:
         self.sleepiness: int = 100  # 0 - wyspany, 100 - zmęczony
         self.experience: int = 0  # EXP
         self.max_experience: int = width - 12
-        self.evolution_stage: int = 0
+        self.evolution_stage: int = evolution_lines[self.evolution_line].index(self.name)
         self.level: int = 1
         self.image = None
 
@@ -225,7 +225,10 @@ def choose_pet() -> None:
         screen.blit(pikachu_text, (275, 415))
     else :
         # Przycisk 1: Squirtle
-
+        screen.blit(squirtle_image, (50, 190))
+        pygame.draw.rect(screen, BLUE, (50, 400, 200, 50))
+        squirtle_text = font.render("Squirtle", True, WHITE)
+        screen.blit(squirtle_text, (55, 415))
 
         # Przycisk 2: Charmander
         screen.blit(charmander_image, (270, 190))
