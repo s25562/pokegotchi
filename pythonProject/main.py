@@ -4,6 +4,7 @@ import json
 import os
 if not os.path.exists("saves"):
     os.makedirs("saves")
+from Button import Button
 
 # Inicjalizacja Pygame
 pygame.init()
@@ -15,7 +16,7 @@ pygame.mixer.init()
 #Timer wyboru zwierzaka
 start_time = pygame.time.get_ticks()
 
-# Wymiary okna
+# Okno
 width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pokegotchi")
@@ -26,45 +27,56 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
+VIOLET = (73, 19, 99)
 
 # Czcionki
 font = pygame.font.SysFont(None, 36)
 
-squirtle_image = pygame.image.load("assets/squirtle.png")
-charmander_image = pygame.image.load("assets/charmander.png")
-bulbasaur_image = pygame.image.load("assets/bulbasaur.png")
-pikachu_image = pygame.image.load("assets/pikachu.png")
-squirtle_image = pygame.transform.scale(squirtle_image,(200, 200))  # Skalowanie obrazu do odpowiednich rozmiarów
-charmander_image = pygame.transform.scale(charmander_image, (220, 200))
-bulbasaur_image = pygame.transform.scale(bulbasaur_image, (200, 200))
-pikachu_image = pygame.transform.scale(pikachu_image, (200, 200))
+# Obrazki do wyboru pokemona i skalowanie do odpowiednich rozmiarów
+squirtle_image = pygame.transform.scale(pygame.image.load("assets/squirtle.png"),(200, 200))
+charmander_image = pygame.transform.scale(pygame.image.load("assets/charmander.png"), (200, 200))
+bulbasaur_image = pygame.transform.scale(pygame.image.load("assets/bulbasaur.png"), (200, 200))
+pikachu_image = pygame.transform.scale(pygame.image.load("assets/pikachu.png"), (200, 200))
 
 
-
+evolution_lines = {
+    'Bulbasaur': ['Bulbasaur', 'Ivysaur', 'Venusaur'],
+    'Squirtle': ['Squirtle', 'Wartortle', 'Blastoise'],
+    'Charmander': ['Charmander', 'Charmeleon', 'Charizard'],
+    'Pikachu': ['Pikachu', 'Raichu', 'AlolanRaichu']
+}
 
 
 # Tworzenie klasy Pokemon
 class Pet:
     def __init__(self, name):
 
-        self.name = name
-        self.hunger = 100  # 0 - najedzony, 100 - głodny
-        self.happiness = 100  # 0 - smutny, 100 - szczęśliwy
-        self.sleepiness = 100  # 0 - wyspany, 100 - zmęczony
-        self.hunger_timer = 0  # Licznik czasu głodu (w klatkach)
-        self.happiness_timer = 0
-        self.sleepiness_timer = 0
-        self.hunger_increment_interval = 100 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
-        self.happiness_increment_interval = 400000 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
-        self.sleepness_increment_interval = 300 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
-        self.experience = 0 # EXP
-        self.max_experience = width - 12
-        self.evolution_stage = 0
-        self.level = 1
+        # Pet properties
+        self.name: str = name
+        for k, v in evolution_lines.items():
+            if self.name in v:
+                self.evolution_line = k
+        self.hunger: int = 100  # 0 - najedzony, 100 - głodny
+        self.happiness: int = 100  # 0 - smutny, 100 - szczęśliwy
+        self.sleepiness: int = 100  # 0 - wyspany, 100 - zmęczony
+        self.experience: int = 0  # EXP
+        self.max_experience: int = width - 12
+        self.evolution_stage: int = 0
+        self.level: int = 1
+        self.image = None
+
+        # Timers and intervals
+        self.hunger_timer: int = 0  # Licznik czasu głodu (w klatkach)
+        self.happiness_timer: int = 0
+        self.sleepiness_timer: int = 0
+        self.hunger_increment_interval: int = 100 # Co ile klatek głód ma wzrosnąć (np. co 5 klatek)
+        self.happiness_increment_interval: int = 400000 # Co ile klatek szczęście ma wzrosnąć (np. co 5 klatek)
+        self.sleepness_increment_interval: int = 300 # Co ile klatek zmęczenie ma wzrosnąć (np. co 5 klatek)
+
         self.load_image()
 
-    def save(self, player_name):
+
+    def save(self, player_name) -> None:
         data = {
             "name": self.name,
             "hunger": self.hunger,
@@ -77,8 +89,14 @@ class Pet:
             json.dump(data, f)
         print("Gra zapisana!")
 
+
     @staticmethod
     def load(player_name):
+        """
+        Overrides a method from PyGame library
+        :param player_name: string
+        :return: Pet
+        """
         with open(f"saves/{player_name}.json", "r") as f:
             data = json.load(f)
         pet = Pet(data["name"])
@@ -89,67 +107,46 @@ class Pet:
         pet.experience = data["experience"]
         return pet
 
-    def level_up(self):
+
+    def level_up(self) -> None:
         self.level += 1
-        self.evolve()
+        if self.level == 25 or self.level == 50:
+            self.evolve()
         self.experience = 0
 
-    def gainExperience(self):
+
+    def gain_experience(self) -> None:
         self.experience += 1
         if self.experience >= self.max_experience:
             self.level_up()
 
 
-    def getExperience(self):
+    def get_experience(self) -> int:
         return self.experience
 
-    def evolve(self):
-        if self.level == 25:
-            if self.name == "Squirtle":
-                self.name = "Wartotle"
-                self.load_image()
-                self.experience = 0
-        if self.level == 50:
-            if self.name == "Wartotle":
-                self.name = "Blastoise"
-                self.load_image()
-                self.experience = 0
-        if self.level == 25:
-            if self.name == "Bulbasaur":
-                self.name = "Ivysaur"
-                self.load_image()
-                self.experience = 0
-        if self.level == 50:
-            if self.name == "Ivysaur":
-                self.name = "Venusaur"
-                self.load_image()
-                self.experience = 0
-        if self.level == 25:
-             if self.name == "Charmander":
-                self.name = "Charmeleon"
-                self.load_image()
-                self.experience = 0
-        if self.level == 50:
-            if self.name == "Charmeleon":
-                self.name = "Charizard"
-                self.load_image()
-                self.experience = 0
+
+    def evolve(self) -> None:
+        self.evolution_stage += 1
+        self.name = evolution_lines[self.evolution_line][self.evolution_stage]
+        self.load_image()
 
 
-    def feed(self):
+    def feed(self) -> None:
         self.hunger = max(self.hunger - 5, 0)
 
-    def play(self):
+
+    def play(self) -> None:
         self.happiness = min(self.happiness + 5, 100)
         #self.sleepiness = min(self.sleepiness + 20, 100)
 
-    def sleep(self):
+
+    def sleep(self) -> None:
         self.sleepiness = max(self.sleepiness - 5, 0)
 
-    def update(self):
 
+    def update(self) -> None:
         # For test purposes
-        self.gainExperience()
+        self.gain_experience()
 
         self.hunger_timer += 1
         if self.hunger_timer >= self.hunger_increment_interval:
@@ -166,13 +163,14 @@ class Pet:
             self.sleepiness = min(self.sleepiness + 1, 100)  # Zwiększamy szczęście o 1
             self.sleepiness_timer = 0  # Resetujemy licznik
 
-    def draw(self):
+
+    def draw(self) -> None:
         # Rysuj pokemona
         screen.blit(self.image, (250, 250))
 
         # Rysuj pasek expa
         pygame.draw.rect(screen, WHITE, (5, 5, 790, 50))
-        pygame.draw.rect(screen, RED, (6, 6, self.getExperience(), 48))
+        pygame.draw.rect(screen, RED, (6, 6, self.get_experience(), 48))
 
         # Rysowanie statusów
         hunger_text = font.render(f"Głód: {self.hunger}", True, WHITE)
@@ -198,36 +196,20 @@ class Pet:
         sleep_text = font.render("Śpij", True, WHITE)
         screen.blit(sleep_text, (545, 515))
 
-        pygame.draw.rect(screen, YELLOW, (520, 500, 200, 50))
+        pygame.draw.rect(screen, VIOLET, (520, 100, 200, 50))
         sleep_text = font.render("SAVE", True, WHITE)
-        screen.blit(sleep_text, (545, 515))
+        screen.blit(sleep_text, (545, 115))
+
+        options_text = font.render("Press \'q\' to quit game, or \'m\' to enter main menu", True, (94, 94, 94))
+        screen.blit(options_text, (125, 570))
+
 
     def load_image(self):
-        if self.name == "Squirtle":
-            self.image = pygame.transform.scale(pygame.image.load("assets/squirtle.png"), (200, 200))
-        elif self.name == "Wartotle":
-            self.image = pygame.transform.scale(pygame.image.load("assets/wartotle.png"), (200, 200))
-        elif self.name == "Blastoise":
-            self.image = pygame.transform.scale(pygame.image.load("assets/blastoise.png"), (200, 200))
-        elif self.name == "Charmander":
-            self.image = pygame.transform.scale(pygame.image.load("assets/charmander.png"), (200, 200))
-        elif self.name == "Charmeleon":
-            self.image = pygame.transform.scale(pygame.image.load("assets/charmeleon.png"), (200, 200))
-        elif self.name == "Charizard":
-            self.image = pygame.transform.scale(pygame.image.load("assets/charizard.png"), (200, 200))
-        elif self.name == "Bulbasaur":
-            self.image = pygame.transform.scale(pygame.image.load("assets/bulbasaur.png"), (200, 200))
-        elif self.name == "Ivysaur":
-            self.image = pygame.transform.scale(pygame.image.load("assets/ivysaur.png"), (200, 200))
-        elif self.name == "Venusaur":
-            self.image = pygame.transform.scale(pygame.image.load("assets/venusaur.png"), (200, 200))
-        elif self.name == "Pikachu":
-            self.image = pygame.transform.scale(pygame.image.load("assets/pikachu.png"), (200, 200))
+        self.image = pygame.transform.scale(pygame.image.load(f'assets/{self.name.lower()}.png'), (200, 200))
 
 
 # Funkcja, która rysuje menu wyboru zwierzaka
-def choose_pet():
-
+def choose_pet() -> None:
     current_time = pygame.time.get_ticks()
     time_elapsed = current_time - start_time
 
@@ -235,20 +217,15 @@ def choose_pet():
     title_text = font.render("Wybierz swojego pokemona!", True, WHITE)
     screen.blit(title_text, (250, 50))
 
-
-
     # Jeżeli nie dokonamy wyboru w ciągu 5 minut, zostanie przypisany pikatchu
     if time_elapsed  > 5 * 60 * 60:
         screen.blit(pikachu_image, (270, 190))
-        pygame.draw.rect(screen, YELLOW, (270, 400, 200, 50))
+        pygame.draw.rect(screen, VIOLET, (270, 400, 200, 50))
         pikachu_text = font.render("Pikachu", True, WHITE)
         screen.blit(pikachu_text, (275, 415))
     else :
         # Przycisk 1: Squirtle
-        screen.blit(squirtle_image, (50, 190))
-        pygame.draw.rect(screen, BLUE, (50, 400, 200, 50))
-        squirtle_text = font.render("Squirtle", True, WHITE)
-        screen.blit(squirtle_text, (55, 415))
+
 
         # Przycisk 2: Charmander
         screen.blit(charmander_image, (270, 190))
@@ -300,13 +277,42 @@ def player_select_menu():
                 # Dodaj Nowy gracz - aktualnie wpisywany z konsoli
                 new_index_y = 120 + len(files) * 60
                 if 300 <= x <= 500 and new_index_y <= y <= new_index_y + 50:
-                    name = input("Podaj imię gracza: ")
+                    name = get_user_name()
+                    pygame.display.set_mode([800, 600])
                     pet = None
                     game_loop(pet, name)
                     return
 
+# Nowy gracz - okno do wpisania nazwy
+def get_user_name() -> str:
+    clock = pygame.time.Clock()
+    pygame.display.set_mode([400, 400])
+    user_text = ''
+    input_rec = pygame.Rect(20, 180, 140, 40)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    user_text = user_text[:-1]
+                else:
+                    user_text += event.unicode
+                if event.key == pygame.K_RETURN:
+                    return user_text
 
-def main_menu():
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, WHITE, input_rec, 1)
+        text_surface = font.render(user_text, True, (255, 255, 255))
+        screen.blit(font.render("Podaj imię gracza: ", True, WHITE), (20, 140))
+        screen.blit(text_surface, (input_rec.x + 5, input_rec.y + 5))
+        input_rec.w = max(100, text_surface.get_width() + 10)
+        pygame.display.flip()
+        clock.tick(60)
+
+
+def main_menu() -> None:
     while True:
         screen.fill(BLACK)
         screen.blit(font.render("Pokegotchi", True, WHITE), (330, 100))
@@ -324,21 +330,21 @@ def main_menu():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
-
-                if 300 <= x <= 500 and 250 <= y <= 300:
-                    player_select_menu()
-                    return
-                elif 300 <= x <= 500 and 350 <= y <= 400:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+
+                if 500 >= x >= 300 >= y >= 250:
+                    player_select_menu()
+                    return
 
 # Główna pętla gry
 def game_loop(pet=None, player_name=None):
     running = True
-    current_player = None
     
     while running:
         screen.fill(BLACK)
@@ -359,7 +365,11 @@ def game_loop(pet=None, player_name=None):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s and pet and player_name:
                     pet.save(player_name)
-
+                if event.key == pygame.K_m:
+                    main_menu()
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
 
@@ -370,14 +380,17 @@ def game_loop(pet=None, player_name=None):
                         pet = Pet("Charmander")
                     elif 490 <= x <= 690 and 400 <= y <= 450:
                         pet = Pet("Bulbasaur")
-
                 elif 60 <= x <= 260 and 500 <= y <= 550:
-                    pet.feed(); pet.gainExperience()
+                    pet.feed()
+                    pet.gain_experience()
                 elif 290 <= x <= 490 and 500 <= y <= 550:
-                    pet.play(); pet.gainExperience()
+                    pet.play()
+                    pet.gain_experience()
                 elif 520 <= x <= 720 and 500 <= y <= 550:
-                    pet.sleep(); pet.gainExperience()
-
+                    pet.sleep()
+                    pet.gain_experience()
+                elif 520 <= x <= 720 and 100 <= y <= 150:
+                    pet.save(player_name)
 
         pygame.display.update()
 
