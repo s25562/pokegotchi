@@ -4,15 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f56a4a6-25d0-41fe-bcbb-d70d885ef014" name="Changes" comment="" />
+    <list default="true" id="7f56a4a6-25d0-41fe-bcbb-d70d885ef014" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poke2gotchi-main/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/poke2gotchi-main/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poke2gotchi-main/saves/aa.json" beforeDir="false" afterPath="$PROJECT_DIR$/poke2gotchi-main/saves/aa.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2yoLMoxmZMsTBNoq3u6JngFlOej" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -23,7 +30,9 @@
     "Python.Pet.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/jakub/Downloads/poke2gotchi-main",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/jakub/Desktop/pokegotchi",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -49,6 +58,7 @@
       <option name="presentableId" value="Default" />
       <updated>1750495933835</updated>
       <workItem from="1750495934916" duration="10481000" />
+      <workItem from="1750510366212" duration="738000" />
     </task>
     <servers />
   </component>
@@ -57,6 +67,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/poke2gotchi_main$main.coverage" NAME="main Coverage Results" MODIFIED="1750506013574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/poke2gotchi-main" />
+    <SUITE FILE_PATH="coverage/pokegotchi$main.coverage" NAME="main Coverage Results" MODIFIED="1750510369931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/poke2gotchi-main" />
     <SUITE FILE_PATH="coverage/poke2gotchi_main$Pet.coverage" NAME="Pet Coverage Results" MODIFIED="1750505852313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/poke2gotchi-main" />
   </component>
 </project>

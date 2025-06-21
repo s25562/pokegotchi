@@ -30,6 +30,9 @@ screen = pygame.display.set_mode((width, height))
 
 
 class Pet:
+    """
+    A class that represents a pet
+    """
     def __init__(self, name):
 
         # Pet properties

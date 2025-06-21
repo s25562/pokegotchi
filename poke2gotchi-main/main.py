@@ -54,6 +54,10 @@ def load(player_name) -> Pet:
     return pet
 
 def choose_pet() -> Pet:
+    """
+    A function that displays available pets and lets player choose from them
+    :return: A chosen pet object
+    """
     screen.fill(BLACK)
     title_text = font.render("Wybierz swojego pokemona!", True, WHITE)
     screen.blit(title_text, (250, 50))
@@ -132,6 +136,10 @@ def player_select_menu() -> None:
 
 
 def get_user_name() -> str:
+    """
+    A function that displays the text field where user can type his name
+    :return: new player name
+    """
     clock = pygame.time.Clock()
     pygame.display.set_mode([400, 400])
     user_text = ''
@@ -160,6 +168,10 @@ def get_user_name() -> str:
 
 
 def main_menu() -> None:
+    """
+    Function that displays the main menu.
+    :return: None
+    """
     while True:
         screen.fill(BLACK)
         screen.blit(font.render("Pokegotchi", True, WHITE), (330, 100))
@@ -197,6 +209,12 @@ def main_menu() -> None:
 
 
 def game_loop(pet=None, player_name=None) -> None:
+    """
+    Function which runs the game loop
+    :param pet: object of chosen pet
+    :param player_name: name of a player
+    :return: None
+    """
     running = True
     lost = False
     while running:
