@@ -140,7 +140,6 @@ def get_user_name() -> str:
     A function that displays the text field where user can type his name
     :return: new player name
     """
-    clock = pygame.time.Clock()
     pygame.display.set_mode([400, 400])
     user_text = ''
     input_rec = pygame.Rect(20, 180, 140, 40)
@@ -164,7 +163,6 @@ def get_user_name() -> str:
         screen.blit(text_surface, (input_rec.x + 5, input_rec.y + 5))
         input_rec.w = max(100, text_surface.get_width() + 10)
         pygame.display.flip()
-        clock.tick(60)
 
 
 def main_menu() -> None:
